@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 } else {
                     //Mensaje si hay paises no validos
-                    Toast.makeText(this, "Ingrese paises validos. \nPaises aceptados:\nArgentina\nBrasil\nChile\nColombia\nUruguay", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Ingrese paises validos. \nPaises aceptados:", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Argentina, Brasil, Chile,\nColombia, Uruguay", Toast.LENGTH_SHORT).show()
                 }
 
             } else {
