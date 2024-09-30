@@ -11,8 +11,4 @@ class IntentHelper {
         intent.putExtra("TercerPais", pais3)
         context.startActivity(intent)
     }
-    fun intentVolver(context: Context, destination: Class<*>) {
-        val intent = Intent(context, destination)
-        context.startActivity(intent)
-    }
 }

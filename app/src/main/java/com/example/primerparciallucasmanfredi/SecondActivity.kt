@@ -12,12 +12,17 @@ import androidx.appcompat.app.AppCompatActivity
 
 class SecondActivity : AppCompatActivity() {
 
+    //Declaracion de variables de UI
     private lateinit var buttonVolver: Button
     private lateinit var spinnerPaises: Spinner
     private lateinit var listView: ListView
 
-    private var paisSeleccionado: String? = null
+    private var paisSeleccionado: String? = null //Variable donde guardar el pais seleccionado del spinner
 
+    var deportistasFiltrados = mutableListOf<Deportista>() //Lista para guardar los deportistas filtrados por pais
+    var nombreDeportistas = mutableListOf<String>() //Lista para guardar los nombres de deportistas. Esta lista es la que se muestra en el ListView
+
+    //Creacion de lista de Deportistas
     val listaDeportistas = listOf(
         // Argentina
         Deportista(1, "Lionel Messi", Deporte.FUTBOL, Pais.ARGENTINA, true),
@@ -80,8 +85,6 @@ class SecondActivity : AppCompatActivity() {
         Deportista(54, "Gustavo Kuerten", Deporte.TENIS, Pais.BRASIL, false),
         Deportista(55, "Darragh O'Brien", Deporte.JUDO, Pais.BRASIL, true)
     )
-    var deportistasFiltrados = mutableListOf<Deportista>()
-    var nombreDeportistas = mutableListOf<String>()
 
     private val intentHelper = IntentHelper()
 
@@ -89,25 +92,30 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
+        //Inicializacion de elementos de UI
         buttonVolver = findViewById(R.id.buttonVolver)
         spinnerPaises = findViewById(R.id.spinner)
         listView = findViewById(R.id.listView)
 
 
-
+        //Recuperacion de los elementos "extras" del intent de la anterior actividad, y los guardo en variables
         val bundle = intent.extras
         val nation1 = bundle?.getString("PrimerPais", "")?.uppercase()
         val nation2 = bundle?.getString("SegundoPais", "")?.uppercase()
         val nation3 = bundle?.getString("TercerPais", "")?.uppercase()
 
-        val paises = listOf(nation1, nation2, nation3)
 
+        val paises = listOf(nation1, nation2, nation3) //Lista para guardar paises ingresados en la anterior actividad
+
+        //Creacion del adaptador del spinner y se lo asigno al spinner del UI
         val adapterSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, paises)
         spinnerPaises.adapter = adapterSpinner
 
+        //Creacion del adaptador del ListView y se lo asigno al ListView del UI
         val adapterListView = ArrayAdapter(this@SecondActivity, android.R.layout.simple_list_item_1, nombreDeportistas)
         listView.adapter = adapterListView
 
+        //On click listener del spinner
         spinnerPaises.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -115,6 +123,7 @@ class SecondActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
+                //Al seleccionar un país, se filtra la lista de deportistas y se actualiza el ListView
                 paisSeleccionado = paises[position]
                 nombreDeportistas.clear()
                 nombreDeportistas.addAll(mostrarDeportistas(paisSeleccionado))
@@ -127,9 +136,11 @@ class SecondActivity : AppCompatActivity() {
             }
         }
 
+        //On click listener de los elementos del listView
         listView.setOnItemClickListener { parent, view, position, id ->
-            val deportistaSeleccionado = deportistasFiltrados[position] // Obtener el deportista seleccionado
+            val deportistaSeleccionado = deportistasFiltrados[position] //Obtener el deportista seleccionado
 
+            //Intent para ir a la siguiente actividad (Se podria haber hecho como funcion de la clase IntentHelper, pero no se reusa el codigo, entonces no se si es necesario)
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("idDeportista", deportistaSeleccionado.id)
             intent.putExtra("nombreDeportista", deportistaSeleccionado.nombre)
@@ -140,14 +151,20 @@ class SecondActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //On click listener del boton "Volver"
         buttonVolver.setOnClickListener {
             finish()
         }
     }
 
+    // Función para filtrar la lista de deportistas por país y obtener una lista con los nombres
     fun mostrarDeportistas(pais: String?): MutableList<String> {
+
+        //Filtrar la lista de deportistas por pais
         deportistasFiltrados = listaDeportistas.filter { it.pais.toString() == pais}
             .toMutableList()
+
+        //Devolver solo los nombres de los deportistas filtrados
         return listaDeportistas
             .filter { it.pais.toString() == pais }
             .map { it.nombre }
