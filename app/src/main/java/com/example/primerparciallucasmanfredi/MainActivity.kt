@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "Ingrese 3 paises distintos", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this, "Ingrese paises validos. \nPaises aceptados: \nArgentina \nBrasil \nChile \nColombia\nUruguay", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Ingrese paises validos. \nPaises aceptados:\nArgentina\nBrasil\nChile\nColombia\nUruguay", Toast.LENGTH_LONG).show()
                 }
 
             } else {
